@@ -1,7 +1,7 @@
 Faster Redmine
 ==============
 
-Change the Status of a Redmine Issue without having to click first on the Edit link, change the Status, and then click on the Submit button. This extension puts a dropdown right on the main Issue view, and changing the selection immediately updates the Issue. You can choose to refresh the page on each Issue update in the extension's settings.
+Chrome extension that allows you to change the Status of a Redmine Issue without having to first: click on the Edit link, change the Status, and then click on the Submit button. This extension puts a dropdown right on the main Issue view, and changing the selection immediately updates the Issue. You can choose to refresh the page on each Issue update in the extension's settings.
 
 Features:
 ---------
