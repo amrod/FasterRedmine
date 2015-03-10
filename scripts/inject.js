@@ -1,59 +1,72 @@
+
 var key = "";
 var rootUrl = "";
-var propagate = true;
-
-chrome.storage.local.get({
-    key: ""
-    }, function(items) {
-       key = items.key;
-});
-
-chrome.storage.sync.get({
-    propagate: true,
-    redmineUrl: ""
-    }, function(items) {
-       propagate = items.propagate;
-       rootUrl = items.redmineUrl;
-       if ( rootUrl.slice(-1) !== "/" ) {
-           rootUrl = rootUrl + "/";
-        }
-});
+// var propagate = true;
 
 var issueId = $("title").text();
 issueId = issueId.substring(issueId.indexOf("#") + 1, issueId.indexOf(":"));
 
-var status_option = $("<select></select>").attr("id", "fast_issue_status_id");
 
-status_option.change(function() {
+chrome.storage.local.get({
+    key: ""
+    }, function(items) {
+        key = items.key;
 
-    var status_id = $("#fast_issue_status_id option:selected")[0].value
-    var jsonData = createIssueUpdateHash(status_id);
-    updateIssue(issueId, jsonData, reloadPageFunc);
-    if (propagate) {
-        getIssue(issueId, function(data){
-            if (data.issue.parent.id) {
-                updateIssue(data.issue.parent.id, jsonData, reloadPageFunc);
-            }
+        chrome.storage.sync.get({
+            propagate: true,
+            redmineUrl: ""
+            }, function(items) {
+               var propagate = items.propagate;
+               rootUrl = items.redmineUrl;
+               if ( rootUrl.slice(-1) !== "/" ) {
+                   rootUrl = rootUrl + "/";
+                }
+
+                injectStatusDropdown(issueId, propagate);
         });
-    }
+
 });
 
-$("#issue_status_id option").each(function( index ) {
-    status_option.append($(this).clone());    
-});
 
-$( ".attributes" ).find(".status").each(function( index ) {
-    if( $(this).is("td") ) {
-        $(this).text("");
-        $(this).append(status_option);
-    }
-});
+function injectStatusDropdown(issueId, propagate){
+    var new_status_option = $("<select></select>").attr("id", "fast_issue_status_id");
+    var real_status_option = $("#issue_status_id option");
+    
+    if (real_status_option.length == 1) {return;}
+
+    real_status_option.each(function( index ) {
+        new_status_option.append($(this).clone());    
+    });
+
+    $( ".attributes" ).find(".status").each(function( index ) {
+        if( $(this).is("td") ) {
+            $(this).text("");
+            $(this).append(new_status_option);
+        }
+    }); 
+
+    new_status_option.change(function() {
+
+        var status_id = $("#fast_issue_status_id option:selected")[0].value
+        var jsonData = createIssueUpdateHash(status_id);
+        updateIssue(issueId, jsonData, reloadPageFunc);
+        if (propagate) {
+            getIssue(issueId, function(data){
+                if (data.issue.parent.id) {
+                    updateIssue(data.issue.parent.id, jsonData, reloadPageFunc);
+                }
+            });
+        }
+    });
+
+}
+
 
 function createIssueUpdateHash(statusId) {
     var jsonData = {
       "issue": {
         "status_id": statusId
-        //"notes": "Automatically updated by FastRedmine." 
+        //"notes": "Automatically updated by FasterRedmine." 
       }
     }
     return JSON.stringify(jsonData);
