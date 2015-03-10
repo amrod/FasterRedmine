@@ -3,7 +3,7 @@
 
   "name": "Faster Redmine",
   "description": "Makes updating Redmine Issues much faster.",
-  "version": "1.0",
+  "version": "1.1",
 
   "icons": {
     "16": "icons/fast-redmine-16.png",
