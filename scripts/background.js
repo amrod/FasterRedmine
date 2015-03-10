@@ -27,7 +27,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         } else if (request.requestRefreshPageActionAllTabs) {
             refreshPageActionIconAllTabs();
 
-        }        
+        } else if (request.getContentVariables) {
+            getContentVariables(sendResponse);
+        }
     }
 
     // Must return true to send multiple responses, else only first response will be sent.
@@ -40,6 +42,30 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         refreshPageActionIcon(tab);
     }
 });
+
+function getContentVariables(callback) {
+    
+    chrome.storage.local.get({
+        key: ""
+        }, function(items) {
+            var key = items.key;
+
+            chrome.storage.sync.get({
+                propagate: true,
+                redmineUrl: ""
+                }, function(items) {
+                   var propagate = items.propagate;
+                   var rootUrl = items.redmineUrl;
+                   if ( rootUrl.slice(-1) !== "/" ) {
+                       rootUrl = rootUrl + "/";
+                    }
+
+                    callback({key: key, propagate: propagate, rootUrl: rootUrl});
+                    
+            });
+
+    });
+}
 
 function refreshPageActionIconAllTabs() {
     chrome.tabs.query({}, function(arrayOfTabs) {

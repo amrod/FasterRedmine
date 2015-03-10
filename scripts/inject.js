@@ -32,7 +32,7 @@ function injectStatusDropdown(issueId, propagate){
     var new_status_option = $("<select></select>").attr("id", "fast_issue_status_id");
     var real_status_option = $("#issue_status_id option");
     
-    if (real_status_option.length == 1) {return;}
+    if (real_status_option.length == 0) {return;}
 
     real_status_option.each(function( index ) {
         new_status_option.append($(this).clone());    
