@@ -39,39 +39,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
         refreshPageActionIcon(tab);
     }
-
-    // chrome.storage.sync.get({
-    //         redmineUrl: "^$"
-    //     }, function(items){
-    //         re = RegExp(items.redmineUrl);
-
-    //         if (changeInfo.status === 'complete') {
-    //             var url = tab.url.split('#')[0]; // Exclude URL fragments
-                
-    //             if (re.test(url) && url !== "chrome://extensions") {
-                    
-    //                 refreshPageActionIcon(tab);
-
-                    // hasPermission(url, function(granted){
-
-                    //     if (granted) {
-                    //         var paths = {"19": "icons/fast-redmine-bw-19.png", "38": "icons/fast-redmine-bw-38.png"};
-
-                    //         chrome.pageAction.setIcon({tabId: tabId, path: paths});
-                    //         chrome.pageAction.show(tabId);
-                    //         injectScripts(tabId);
-
-                    //     } else {
-                    //         var paths = {"19": "icons/fast-redmine-bw-blocked-19.png", "38": "icons/fast-redmine-bw-blocked-38.png"};
-
-                    //         chrome.pageAction.setIcon({tabId: tabId, path: paths});
-                    //         chrome.pageAction.show(tabId);
-                    //     }
-
-                    // });
-            //     } 
-            // } 
-    // }); 
 });
 
 function refreshPageActionIconAllTabs() {
