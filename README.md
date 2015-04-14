@@ -12,3 +12,7 @@ Features:
 Attention
 ---------
 To use this extension, your Redmine application must have API-style authentication enabled. You or your administrator can do this by checking Enable REST API in Administration -> Settings -> Authentication
+
+
+###### Install it from the Chrome Webstore: 
+[https://chrome.google.com/webstore/detail/faster-redmine/iedaoamijfofbhoijikefgbonmcbklng](https://chrome.google.com/webstore/detail/faster-redmine/iedaoamijfofbhoijikefgbonmcbklng)

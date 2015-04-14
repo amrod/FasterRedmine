@@ -14,7 +14,8 @@
   "permissions": [
     "tabs",
     "storage",
-    "contentSettings"
+    "contentSettings",
+    "notifications"
   ],
 
   "optional_permissions": [  
@@ -23,7 +24,9 @@
   ],
 
   "background": {
-    "scripts": ["scripts/background.js"],
+    "scripts": [
+      "scripts/background.js",
+      "scripts/jquery-1.11.2.min.js"],
     "persistent": false
   },
 
@@ -40,6 +43,14 @@
     "page": "options.html",
     "chrome_style": true,
     "open_in_tab": false
-  }
+  },
+
+  "browser_action": {
+      "default_icon": {                    
+        "19": "icons/fast-redmine-16.png",
+        "38": "icons/fast-redmine-48.png"
+      },
+      "default_title": "Faster Redmine"
+    },
 
 }

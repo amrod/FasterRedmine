@@ -5,7 +5,7 @@ function display() {
         chrome.runtime.sendMessage({hasPermission: true, origin: arrayOfTabs[0].url}, function(granted) {
             var msgdiv = document.getElementById("message");
 
-            console.log("hasPermission response = " + granted);
+            //console.log("hasPermission response = " + granted);
 
             if (granted) {
                 msgdiv.textContent = "Enabled on this site.";

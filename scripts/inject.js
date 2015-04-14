@@ -6,25 +6,12 @@ var rootUrl = "";
 var issueId = $("title").text();
 issueId = issueId.substring(issueId.indexOf("#") + 1, issueId.indexOf(":"));
 
+chrome.runtime.sendMessage({getContentVariables: true}, function(vars) {
+    key = vars.key;
+    propagate = vars.propagate;
+    rootUrl = vars.redmineUrl;
 
-chrome.storage.local.get({
-    key: ""
-    }, function(items) {
-        key = items.key;
-
-        chrome.storage.sync.get({
-            propagate: true,
-            redmineUrl: ""
-            }, function(items) {
-               var propagate = items.propagate;
-               rootUrl = items.redmineUrl;
-               if ( rootUrl.slice(-1) !== "/" ) {
-                   rootUrl = rootUrl + "/";
-                }
-
-                injectStatusDropdown(issueId, propagate);
-        });
-
+    injectStatusDropdown(issueId, propagate);
 });
 
 

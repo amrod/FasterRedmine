@@ -43,6 +43,37 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
 });
 
+chrome.permissions.onRemoved.addListener(function(permissions) {
+
+    var currentdate = new Date();
+    var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+    var opt = {
+        type: "basic",
+        title: "FasterRedmine",
+        message: "The extension lost permission to access your Redmine app.\nTime: " + datetime,
+        iconUrl: "icons/fast-redmine-128.png",
+        buttons: [{title: "Reauthorize"}]
+    };
+
+    chrome.notifications.create("fasterredminelostpermission", opt, function(id) {});
+
+});
+
+chrome.notifications.onButtonClicked.addListener(reauthBtnClick);
+
+function reauthBtnClick() {
+    getContentVariables(function (vars){
+        requestPermission(vars.redmineUrl, function() {});
+    });
+
+    chrome.notifications.clear("fasterredminelostpermission");
+}
+
 function getContentVariables(callback) {
     
     chrome.storage.local.get({
@@ -55,12 +86,12 @@ function getContentVariables(callback) {
                 redmineUrl: ""
                 }, function(items) {
                    var propagate = items.propagate;
-                   var rootUrl = items.redmineUrl;
-                   if ( rootUrl.slice(-1) !== "/" ) {
-                       rootUrl = rootUrl + "/";
+                   var redmineUrl = items.redmineUrl;
+                   if ( redmineUrl.slice(-1) !== "/" ) {
+                       redmineUrl = redmineUrl + "/";
                     }
 
-                    callback({key: key, propagate: propagate, rootUrl: rootUrl});
+                    callback({key: key, propagate: propagate, redmineUrl: redmineUrl});
                     
             });
 
@@ -127,6 +158,8 @@ function reloadTab(tabId){
 function requestPermission(urls, callback) {
     // Permissions must be requested from inside a user gesture, like a button's
     // click handler.
+
+    //console.log("Requesting permissions for " + urls);
 
     if (urls.constructor !== Array) {
         urls = [urls]
