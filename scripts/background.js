@@ -122,24 +122,32 @@ function refreshBrowserActionIcon (tab) {
             if (!(re.test(url) && url !== "chrome://extensions")) {
                 var paths = {"38": "icons/fast-redmine-bw-38.png"};
 
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, runtimeLastErrorCallback);
 
             }else if (granted) {
                 var paths = {"38": "icons/fast-redmine-38.png"};
 
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, runtimeLastErrorCallback);
                 injectScripts(tab.id);
 
             } else {
                 var paths = {"19": "icons/fast-redmine-bw-blocked-19.png", "38": "icons/fast-redmine-bw-blocked-38.png"};
 
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths, runtimeLastErrorCallback});
            }
 
            //chrome.browserAction.show(tab.id);
 
         });
     });
+}
+
+function runtimeLastErrorCallback() {
+    if (chrome.runtime.lastError) {
+        console.log(chrome.runtime.lastError.message);
+    } else {
+        // Tab exists
+    }
 }
 
 chrome.runtime.onInstalled.addListener(function(details){
