@@ -1,59 +1,60 @@
 // Saves options to chrome.storage.sync.
 function saveOptions() {
 
-  var key = document.getElementById('key').value;
-  var redmineUrl = document.getElementById('redmineUrl').value;
-  var propagate = document.getElementById('propagate').checked;
-  var reload = document.getElementById('reload').checked;
+    var key = document.getElementById('key').value;
+    var redmineUrl = document.getElementById('redmineUrl').value;
+    var propagate = document.getElementById('propagate').checked;
+    var reload = document.getElementById('reload').checked;
 
-  if ( redmineUrl.slice(-1) !== "/" ) {
-      redmineUrl = redmineUrl + "/";
-  }
-
-  var re = /^https?:\/\/(www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)$/g;
+    if ( redmineUrl.slice(-1) !== "/" ) {
+        redmineUrl = redmineUrl + "/";
+    }
+    
+    if (!isValidURL(redmineUrl)) {
+      notifyUser('Invalid URL. Please enter the root domain only. e.g. https://redmine.mycompany.com/');
+      return;
+    }
   
-  if (!re.test(redmineUrl)) {
-    notifyUser('Invalid URL. Please enter the root domain only. e.g. https://regmine.mycompany.com/');
-    return;
-  }
+    /** Remove permissions to any current Redmine URL */
+    chrome.runtime.sendMessage({getContentVariables: true}, function(contentVars) {
+        if (isValidURL(contentVars.redmineURL))
+        {
+            chrome.runtime.sendMessage({removePermission: true, origins: contentVars.redmineURL}, function(response) {});
+        }
+    }); 
 
-  chrome.storage.sync.set({
-    propagate: propagate,
-    redmineUrl: redmineUrl,
-    reload: reload
-  }, function() {
-    // Store key locally
-    chrome.storage.local.set({
-      key: key
-    }, notifyUser);
-  });
-
-  chrome.runtime.sendMessage({requestPermission: true, origins: [redmineUrl]}, function(response) {
-      if (response.granted) {
-          notifyUser('Access to ' + redmineUrl + ' granted.');
-          refreshPageActionIconAllTabs();
-      } else {
-          notifyUser('Permission not granted. Extension WILL NOT function on these domains.');
-      }
-  });
-}
-
-function refreshPageActionIconAllTabs() {
-    chrome.runtime.sendMessage({requestRefreshPageActionAllTabs: true}, function(response) {
-      // Do nothing else
+    chrome.storage.sync.set({     
+        propagate: propagate,
+        redmineUrl: redmineUrl,
+        reload: reload
+    }, function() {
+        // Store key locally
+        chrome.storage.local.set({key: key}, notifyUser);
+    });
+  
+    chrome.runtime.sendMessage({requestPermission: true, origins: [redmineUrl]}, function(response) {
+        if (response.granted) {
+            notifyUser('Access to ' + redmineUrl + ' granted.');
+            refreshBrowserActionIconAllTabs();
+        } else {
+            notifyUser('Permission not granted. Extension WILL NOT function on these domains.');
+        }
     });
 }
 
-function hasPermission(url){
-    chrome.permissions.contains({
-        permissions: ['contentSettings'],
-        origins: [url]
-      }, function(result) {
-        if (result) {
-            //console.log("hasPermission(" + url +"): true");
-        } else {
-            //console.log("hasPermission(" + url +"): false");
-        }
+function isValidURL(url) {
+    var re = /^https?:\/\/((www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)$|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\,\d{1,3})/gi;
+    
+    if (!re.test(url))
+        return false;
+    else
+        return true;
+ 
+}
+
+function refreshBrowserActionIconAllTabs() {
+    chrome.runtime.sendMessage({requestRefreshBrowserActionAllTabs: true}, function(response) {
+      // Do nothing else
     });
 }
 

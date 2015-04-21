@@ -20,12 +20,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         } else if (request.removePermission && request.origins) {
             removePermission(request.origins, sendResponse);
-
+        
         } else if (request.hasPermission && request.origin) {
             hasPermission(request.origin, sendResponse );
 
-        } else if (request.requestRefreshPageActionAllTabs) {
-            refreshPageActionIconAllTabs();
+        } else if (request.requestRefreshBrowserActionAllTabs) {
+            refreshBrowserActionIconAllTabs();
 
         } else if (request.getContentVariables) {
             getContentVariables(sendResponse);
@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     
     if (changeInfo.status === 'complete') {
-        refreshPageActionIcon(tab);
+        refreshBrowserActionIcon(tab);
     }
 });
 
@@ -98,17 +98,17 @@ function getContentVariables(callback) {
     });
 }
 
-function refreshPageActionIconAllTabs() {
+function refreshBrowserActionIconAllTabs() {
     chrome.tabs.query({}, function(arrayOfTabs) {
         for (var i = 0; i < arrayOfTabs.length; i++) {
             if (arrayOfTabs[i].status == "complete") {
-                refreshPageActionIcon(arrayOfTabs[i]);
+                refreshBrowserActionIcon(arrayOfTabs[i]);
             }
         }
     });
 }
 
-function refreshPageActionIcon (tab) {
+function refreshBrowserActionIcon (tab) {
 
     var url = tab.url.split('#')[0]; // Exclude URL fragments
 
@@ -120,22 +120,24 @@ function refreshPageActionIcon (tab) {
             re = RegExp(items.redmineUrl);
             
             if (!(re.test(url) && url !== "chrome://extensions")) {
-                return;
-            }
+                var paths = {"38": "icons/fast-redmine-bw-38.png"};
 
-            if (granted) {
-                var paths = {"19": "icons/fast-redmine-bw-19.png", "38": "icons/fast-redmine-bw-38.png"};
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
 
-                chrome.pageAction.setIcon({tabId: tab.id, path: paths});
-                chrome.pageAction.show(tab.id);
+            }else if (granted) {
+                var paths = {"38": "icons/fast-redmine-38.png"};
+
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
                 injectScripts(tab.id);
 
             } else {
                 var paths = {"19": "icons/fast-redmine-bw-blocked-19.png", "38": "icons/fast-redmine-bw-blocked-38.png"};
 
-                chrome.pageAction.setIcon({tabId: tab.id, path: paths});
-                chrome.pageAction.show(tab.id);
-            }
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths});
+           }
+
+           //chrome.browserAction.show(tab.id);
+
         });
     });
 }

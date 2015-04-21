@@ -30,15 +30,6 @@
     "persistent": false
   },
 
-  "page_action": {
-    "default_icon": {                   
-      "19": "icons/fast-redmine-bw-19.png",
-      "38": "icons/fast-redmine-bw-38.png"
-    },
-    "default_title": "Faster Redmine",   
-    "default_popup": "popup.html"     
-  },
-
   "options_ui": {
     "page": "options.html",
     "chrome_style": true,
@@ -47,10 +38,9 @@
 
   "browser_action": {
       "default_icon": {                    
-        "19": "icons/fast-redmine-16.png",
-        "38": "icons/fast-redmine-48.png"
+        "19": "icons/fast-redmine-19.png",
+        "38": "icons/fast-redmine-38.png"
       },
       "default_title": "Faster Redmine"
-    },
-
+    }
 }
