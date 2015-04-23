@@ -3,7 +3,7 @@
 <head>
   <title>Faster Redmine Options</title>
   <style>
-    body: { padding: 10px; }
+    body { padding: 10px; }
 
     div.box {
       box-sizing: border-box;
@@ -19,20 +19,37 @@
     div.box_right {
       float: right;
     }
+
+    div.fieldtitle {
+      font-weight:bold;
+    }
+    
+    div.fieldsubtitle {
+      color:#7D7D7D;
+    }
+    
+    div.important {
+        color:#F45C13;
+    }
   </style>
 </head>
 
 <body>
   <label>
-    Redmine application root URL:
-    <br>
+      <div class="fieldtitle">Redmine application root URL:</div>
     <input type="text" id="redmineUrl" size=40 placeholder="https://regmine.mycompany.com/">
   </label>
   <br><br>
   <label>
-    Redmine API Key: <span style="font-style:italic;color:#F45C13">(For security reasons, value is not synched.)</span>
-    <br>
+      <div class="fieldtitle">Redmine API Key:</div> 
+      <div class="important">For security reasons, value is not synched.</div>
     <input type="text" id="key" size=40 placeholder="Go to My Account -> API access Key -> Show">
+  </label>
+  <br><br>
+  <label>
+      <div class="fieldtitle">Atom feed of overdue tasks:</div> 
+      <div class="fieldsubtitle">Create a custom query and look for the Atom link at the bottom of the results.</div> 
+    <input type="text" id="atom_feed" size=60 placeholder="https://rm.myco.com/projects/1/issues.atom?key=123ABC&query_id=123">
   </label>
   <br><br>
   <label>
