@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     
-    if (changeInfo.status === 'complete') {
+    if (changeInfo.status === 'loading') {
         refreshBrowserActionIcon(tab);
     }
 });
