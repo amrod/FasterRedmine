@@ -3,6 +3,8 @@ var propagate;
 var redmineUrl;
 var atomUrl;
 
+var fr = new FasterRedmine();
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     var options = "chrome-extension://" + chrome.runtime.id + "/options.html";
@@ -20,19 +22,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
 
         } else if (request.requestPermission && request.origins) {
-            requestPermission(request.origins, sendResponse);
+            console.log("sendMessage::requestPermission");
+            fr.requestPermission(request.origins, sendResponse);
 
         } else if (request.removePermission && request.origins) {
-            removePermission(request.origins, sendResponse);
+            fr.removePermission(request.origins, sendResponse);
         
         } else if (request.hasPermission && request.origin) {
-            hasPermission(request.origin, sendResponse );
+            fr.hasPermission(request.origin, sendResponse );
 
         } else if (request.requestRefreshBrowserActionAllTabs) {
-            refreshBrowserActionIconAllTabs();
+            fr.refreshBrowserActionIconAllTabs();
 
         } else if (request.getContentVariables) {
-            getContentVariables(sendResponse);
+            fr.getContentVariables(sendResponse);
         }
     }
 
@@ -43,7 +46,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     
     if (changeInfo.status === 'loading') {
-        refreshBrowserActionIcon(tab);
+        fr.refreshBrowserActionIcon(tab);
+        //console.log("Injected content");
+    } else if (changeInfo.status === 'complete') {
+        fr.injectScripts(tab);
     }
 });
 
@@ -68,7 +74,7 @@ chrome.permissions.onRemoved.addListener(function(permissions) {
 
 });
 
-chrome.notifications.onButtonClicked.addListener(reauthBtnClick);
+chrome.notifications.onButtonClicked.addListener(fr.reauthBtnClick);
 
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){

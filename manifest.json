@@ -25,9 +25,9 @@
 
   "background": {
     "scripts": [
-      "scripts/background.js",
       "scripts/fasterredmine.js",
-      "scripts/jquery-1.11.2.min.js"],
+      "scripts/jquery-1.11.2.min.js",
+      "scripts/background.js"],
     "persistent": false
   },
 

@@ -1,31 +1,31 @@
-function FasterRemine() {}
+function FasterRedmine() {}
 
-FasterRemine.prototype.setApiKey(key) {
-    this.key = key;
+FasterRedmine.prototype.setApiKey = function(key) {
+    FasterRedmine.prototype.key = key;
 }
 
 FasterRedmine.prototype.setPropagateFlag = function(value) {
-    this.propagate = value;
+    FasterRedmine.prototype.propagate = value;
 }
 
 FasterRedmine.prototype.setRedmineUrl = function(url) {
-    this.redmineUrl = url;
+    FasterRedmine.prototype.redmineUrl = url;
 }
 
 FasterRedmine.prototype.setAtomUrl = function(url) {
-    this.atomUrl = url;
+    FasterRedmine.prototype.atomUrl = url;
 }
 
 FasterRedmine.prototype.loadConfig = function(config) {
-    this.setApiKey(config.key);
-    this.setPropagateFLag(config.propagate);
-    this.setRedmineUrl(config.redmineUrl);
-    this.setAtomUrl(config.atomUrl);
+    FasterRedmine.prototype.setApiKey(config.key);
+    FasterRedmine.prototype.setPropagateFLag(config.propagate);
+    FasterRedmine.prototype.setRedmineUrl(config.redmineUrl);
+    FasterRedmine.prototype.setAtomUrl(config.atomUrl);
 }
 
 FasterRedmine.prototype.reauthBtnClick = function() {
-    getContentVariables(function (vars){
-        requestPermission(vars.redmineUrl, function() {});
+    FasterRedmine.prototype.getContentVariables(function (vars){
+        FasterRedmine.prototype.requestPermission(vars.redmineUrl, function() {});
     });
 
     chrome.notifications.clear("fasterredminelostpermission");
@@ -56,47 +56,46 @@ FasterRedmine.prototype.getContentVariables = function(callback) {
     });
 }
 
-FasterRedmine.prototype.refreshBrowserActionIconAllTabs = function() {
-    chrome.tabs.query({}, function(arrayOfTabs) {
-        for (var i = 0; i < arrayOfTabs.length; i++) {
-            if (arrayOfTabs[i].status == "complete") {
-                refreshBrowserActionIcon(arrayOfTabs[i]);
-            }
-        }
-    });
-}
-
 FasterRedmine.prototype.refreshBrowserActionIcon = function(tab) {
 
     var url = tab.url.split('#')[0]; // Exclude URL fragments
 
-    hasPermission(url, function(granted){
+    FasterRedmine.prototype.hasPermission(url, function(granted){
 
         chrome.storage.sync.get({
             redmineUrl: "^$"
         }, function(items){
             re = RegExp(items.redmineUrl);
-            
+            var callback =   FasterRedmine.prototype.runtimeLastErrorCallback;
+
             if (!(re.test(url) && url !== "chrome://extensions")) {
                 var paths = {"38": "icons/fast-redmine-bw-38.png"};
-
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, runtimeLastErrorCallback);
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, callback);
 
             }else if (granted) {
-                var paths = {"38": "icons/fast-redmine-38.png"};
-
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, runtimeLastErrorCallback);
-                injectScripts(tab.id);
+                var paths = {"38": "icons/fast-redmine-38.png"}; 
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, callback);
 
             } else {
                 var paths = {"19": "icons/fast-redmine-bw-blocked-19.png", "38": "icons/fast-redmine-bw-blocked-38.png"};
-
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths, runtimeLastErrorCallback});
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths, callback});
            }
 
            //chrome.browserAction.show(tab.id);
 
         });
+    });
+}
+
+FasterRedmine.prototype.refreshBrowserActionIconAllTabs = function() {
+    //console.log("This is: " + JSON.stringify(this));
+    chrome.tabs.query({}, function(arrayOfTabs) {
+        for (var i = 0; i < arrayOfTabs.length; i++) {
+            if (arrayOfTabs[i].status == "complete") {
+               FasterRedmine.prototype.refreshBrowserActionIcon(arrayOfTabs[i]);
+                //refreshBrowserActionIcon(arrayOfTabs[i]);
+            }
+        }
     });
 }
 
@@ -118,7 +117,7 @@ FasterRedmine.prototype.requestPermission = function(urls, callback) {
     // Permissions must be requested from inside a user gesture, like a button's
     // click handler.
 
-    //console.log("Requesting permissions for " + urls);
+    console.log("FasterRedmine::requestPermisison: Requesting permissions for " + urls);
 
     if (urls.constructor !== Array) {
         urls = [urls]
@@ -170,16 +169,19 @@ FasterRedmine.prototype.hasPermission = function(url, callback){
     });
 }
 
-FasterRedmine.prototype.injectScripts = function(tabId) {
-
-    chrome.tabs.executeScript(tabId, {
-        file: "scripts/jquery-1.11.2.min.js",
-        runAt: "document_end"
-    }, function(){
-        chrome.tabs.executeScript(tabId, {
-            file: "scripts/inject.js",
-            runAt: "document_end"
-        });
+FasterRedmine.prototype.injectScripts = function(tab) {
+    FasterRedmine.prototype.hasPermission(tab.url, function(granted){
+        if (granted) {
+            chrome.tabs.executeScript(tab.id, {
+                file: "scripts/jquery-1.11.2.min.js",
+                runAt: "document_end"
+            }, function(){
+                chrome.tabs.executeScript(tabId, {
+                    file: "scripts/inject.js",
+                    runAt: "document_end"
+                });
+            });
+        }
     });
 }
 

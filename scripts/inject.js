@@ -101,6 +101,6 @@ function getIssue(issueId, callback){
         complete: function(jqXHR, textStatus) {
             //console.log("Complete: " + textStatus);
         }
-    })
+    });
 
 }
