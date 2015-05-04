@@ -78,7 +78,7 @@ FasterRedmine.prototype.refreshBrowserActionIcon = function(tab) {
 
             } else {
                 var paths = {"19": "icons/fast-redmine-bw-blocked-19.png", "38": "icons/fast-redmine-bw-blocked-38.png"};
-                chrome.browserAction.setIcon({tabId: tab.id, path: paths, callback});
+                chrome.browserAction.setIcon({tabId: tab.id, path: paths}, callback);
            }
 
            //chrome.browserAction.show(tab.id);
