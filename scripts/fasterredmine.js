@@ -176,7 +176,7 @@ FasterRedmine.prototype.injectScripts = function(tab) {
                 file: "scripts/jquery-1.11.2.min.js",
                 runAt: "document_end"
             }, function(){
-                chrome.tabs.executeScript(tabId, {
+                chrome.tabs.executeScript(tab.id, {
                     file: "scripts/inject.js",
                     runAt: "document_end"
                 });
@@ -204,6 +204,6 @@ FasterRedmine.prototype.getAtomFeed = function(url, callback) {
     });
 }
 
-FasterRedmine.prototype.updateBadge = function(tabId) {
+FasterRedmine.prototype.updateBadge = function(tab) {
     
 }
