@@ -15,7 +15,8 @@
     "tabs",
     "storage",
     "contentSettings",
-    "notifications"
+    "notifications",
+    "alarms"
   ],
 
   "optional_permissions": [  
