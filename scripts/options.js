@@ -20,30 +20,28 @@ function saveOptions() {
         notifyUser('Invalid Atom feed URL. Please enter a URL of the form: https://rm.myco.com/projects/1/issues.atom?key=123ABC&query_id=123');
         return;
     }
+    
     /** Remove permissions to any current Redmine URL */
     chrome.runtime.sendMessage({getContentVariables: true}, function(contentVars) {
-        if (isValidURL(contentVars.redmineURL))
-        {
+        if (isValidURL(contentVars.redmineURL)){
             chrome.runtime.sendMessage({removePermission: true, origins: contentVars.redmineURL}, function(response) {});
         }
     }); 
 
-    chrome.storage.sync.set({     
-        propagate: propagate,
-        redmineUrl: redmineUrl,
-        reload: reload,
-        atomFeed: atomFeed
-    }, function() {
-        // Store key locally
-        chrome.storage.local.set({key: key}, notifyUser);
-    });
-  
+    var items = {key: key, 
+                 propagate: propagate,
+                 redmineUrl: redmineUrl,
+                 reload: reload,
+                 atomFeed: atomFeed}
+
+    chrome.runtime.sendMessage({setContentVariables: true, items: items}, notifyUser);
+
     chrome.runtime.sendMessage({requestPermission: true, origins: [redmineUrl]}, function(response) {
         if (response.granted) {
             notifyUser('Access to ' + redmineUrl + ' granted.');
             refreshBrowserActionIconAllTabs();
         } else {
-            notifyUser('Permission not granted. Extension WILL NOT function on these domains.');
+            notifyUser('Permission not granted. Extension WILL NOT function on this domain.');
         }
     });
 
@@ -56,8 +54,7 @@ function isValidURL(url) {
     if (!re.test(url))
         return false;
     else
-        return true;
- 
+        return true; 
 }
 
 function refreshBrowserActionIconAllTabs() {
@@ -71,7 +68,6 @@ function notifyUser(msg) {
     var status = document.getElementById('status');
     
     status.textContent = 'Options saved.';
-    console.log("Options saved. | " + msg);
     setTimeout(function() {
 
       if (msg) {
@@ -90,23 +86,13 @@ function notifyUser(msg) {
 
 // Restores state using the preferences stored in chrome.storage.sync and .local
 function restoreOptions() {
-  chrome.storage.sync.get({
-    propagate: true,
-    reload: true,
-    redmineUrl: '',
-    atomFeed: ''
-  }, function(items) {
-    document.getElementById('propagate').checked = items.propagate;
-    document.getElementById('reload').checked = items.reload;
-    document.getElementById('redmineUrl').value = items.redmineUrl;
-    document.getElementById('atom_feed').value = items.atomFeed;
-  });
-
-  chrome.storage.local.get({
-    key: ''
-  }, function(items) {
-    document.getElementById('key').value = items.key;
-  });
+    chrome.runtime.sendMessage({getContentVariables: true}, function(items) {
+        document.getElementById('propagate').checked = items.propagate;
+        document.getElementById('reload').checked = items.reload;
+        document.getElementById('redmineUrl').value = items.redmineUrl;
+        document.getElementById('atom_feed').value = items.atomFeed;
+        document.getElementById('key').value = items.key;
+    });
 }
 
 function clearPermissions() {

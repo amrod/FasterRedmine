@@ -42,7 +42,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             });
 
         } else if (request.requestPermission && request.origins) {
-            console.log("sendMessage::requestPermission");
             fr.requestPermission(request.origins, sendResponse);
 
         } else if (request.removePermission && request.origins) {
@@ -56,6 +55,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         } else if (request.getContentVariables) {
             fr.getContentVariables(sendResponse);
+        
+        } else if (request.setContentVariables && request.items) {
+            fr.setContentVariables(request.items, sendResponse);
 
         } else if (request.injectContentAllTabs) {
             injectContentScriptAllTabs();
@@ -105,14 +107,12 @@ chrome.runtime.onInstalled.addListener(function(details){
     }else if(details.reason == "update"){
         injectContentScriptAllTabs();
         //var thisVersion = chrome.runtime.getManifest().version;
-        //console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     }
 });
 
 chrome.alarms.onAlarm.addListener(function(alarm){
     if (alarm.name === alarmName) {
         fr.updateBadge();
-        console.log("Badge updated");
     }
 });
 

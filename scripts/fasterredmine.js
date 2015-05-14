@@ -32,7 +32,6 @@ FasterRedmine.prototype.reauthBtnClick = function() {
 }
 
 FasterRedmine.prototype.getContentVariables = function(callback) {
-    
     chrome.storage.local.get({
         key: ""
         }, function(items) {
@@ -41,18 +40,36 @@ FasterRedmine.prototype.getContentVariables = function(callback) {
             chrome.storage.sync.get({
                 propagate: true,
                 redmineUrl: "",
-                atomFeed: ""
+                reload: true,
+                atomFeed: ""          
                 }, function(items) {
-                    var redmineUrl = items.redmineUrl;
-                    if ( redmineUrl.slice(-1) !== "/" ) {
-                       redmineUrl = redmineUrl + "/";
+                    items.key = key;
+                    if (items.redmineUrl.slice(-1) !== "/" ) {
+                       items.redmineUrl = items.redmineUrl + "/";
                     }
-                    
-                    callback({key: key, propagate: items.propagate, redmineUrl: redmineUrl, atomFeed: items.atomFeed});
-                    
+                    callback(items);
             });
 
     });
+}
+
+FasterRedmine.prototype.setContentVariables = function(items, callback) {
+    items.key = items.key || "";
+    items.propagate = items.propagate || false;
+    items.redmineUrl = items.redmineUrl || "";
+    items.reload = items.reload || true;
+    items.atomFeed = items.atomFeed || "";
+
+    chrome.storage.sync.set({     
+        propagate: items.propagate,
+        redmineUrl: items.redmineUrl,
+        reload: items.reload,
+        atomFeed: items.atomFeed
+    }, function() {
+        // Store key locally
+        chrome.storage.local.set({key: items.key}, callback);
+    });
+
 }
 
 FasterRedmine.prototype.refreshBrowserActionIcon = function(tab) {
@@ -115,8 +132,6 @@ FasterRedmine.prototype.reloadTab = function(tabId){
 FasterRedmine.prototype.requestPermission = function(urls, callback) {
     // Permissions must be requested from inside a user gesture, like a button's
     // click handler.
-
-    console.log("FasterRedmine::requestPermisison: Requesting permissions for " + urls);
 
     if (urls.constructor !== Array) {
         urls = [urls]
@@ -191,9 +206,6 @@ FasterRedmine.prototype.getAtomFeed = function(url, callback) {
         url: url,
         dataType: 'xml', // format of the response
         success: function(data, textStatus, jqXHR) {
-            //console.log("Succes: " + textStatus);
-            //feed = data;
-            //console.log(data);
             callback(data);
         },
         complete: function(jqXHR, textStatus) {
