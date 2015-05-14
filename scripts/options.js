@@ -46,6 +46,8 @@ function saveOptions() {
             notifyUser('Permission not granted. Extension WILL NOT function on these domains.');
         }
     });
+
+    chrome.runtime.sendMessage({injectContentAllTabs: true});
 }
 
 function isValidURL(url) {

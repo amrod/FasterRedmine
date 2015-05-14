@@ -235,7 +235,6 @@ FasterRedmine.prototype.updateBadge = function() {
 
 FasterRedmine.prototype.isValidURL = function(url) {
     var re = /^https?:\/\/((www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\,\d{1,3}).*/gi;
-    
     if (!re.test(url))
         return false;
     else

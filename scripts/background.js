@@ -6,6 +6,25 @@ var alarmName = "FasterRedmineCheckPendingIssuesAlarm";
 
 var fr = new FasterRedmine();
 
+
+chrome.alarms.create(alarmName, {delayInMinutes: 1, periodInMinutes: 1});
+
+
+function injectContentScriptAllTabs() {
+    chrome.tabs.query({}, function(arrayOfTabs) {
+        for (var i = 0; i < arrayOfTabs.length; i++) {
+            if (arrayOfTabs[i].status == "complete") {
+                fr.injectScripts(arrayOfTabs[i]);
+            }
+        }
+    });
+}
+
+/************
+ *  Listeners
+ ************
+ */
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     var options = "chrome-extension://" + chrome.runtime.id + "/options.html";
@@ -37,6 +56,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         } else if (request.getContentVariables) {
             fr.getContentVariables(sendResponse);
+
+        } else if (request.injectContentAllTabs) {
+            injectContentScriptAllTabs();
         }
     }
 
@@ -81,13 +103,11 @@ chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
         chrome.tabs.create({ url: "chrome://extensions/?options=" + chrome.runtime.id });
     }else if(details.reason == "update"){
+        injectContentScriptAllTabs();
         //var thisVersion = chrome.runtime.getManifest().version;
         //console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     }
 });
-
-chrome.alarms.create(alarmName, {delayInMinutes: 1, periodInMinutes: 1});
-//console.log("Alarm set.");
 
 chrome.alarms.onAlarm.addListener(function(alarm){
     if (alarm.name === alarmName) {
@@ -95,3 +115,5 @@ chrome.alarms.onAlarm.addListener(function(alarm){
         console.log("Badge updated");
     }
 });
+
+                                                                        
