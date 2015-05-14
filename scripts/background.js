@@ -2,6 +2,7 @@ var apiKey;
 var propagate;
 var redmineUrl;
 var atomUrl;
+var alarmName = "FasterRedmineCheckPendingIssuesAlarm";
 
 var fr = new FasterRedmine();
 
@@ -17,7 +18,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 reload: true
             }, function(items) {
                 if (items.reload) {
-                    reloadTab(sender.tab.id);
+                    fr.reloadTab(sender.tab.id);
                 }
             });
 
@@ -85,4 +86,14 @@ chrome.runtime.onInstalled.addListener(function(details){
     }
 });
 
+chrome.alarms.create(alarmName, {delayInMinutes: 1, periodInMinutes: 1});
+//console.log("Alarm set.");
 
+chrome.alarms.onAlarm.addListener(function(alarm){
+    console.log("Alarm fired");
+    console.log(alarm);
+    if (alarm.name === alarmName) {
+        fr.updateBadge();
+        console.log("Badge updated");
+    }
+});

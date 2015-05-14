@@ -41,15 +41,14 @@ FasterRedmine.prototype.getContentVariables = function(callback) {
             chrome.storage.sync.get({
                 propagate: true,
                 redmineUrl: "",
-                atom_feed: ""
+                atomFeed: ""
                 }, function(items) {
-                   var propagate = items.propagate;
-                   var redmineUrl = items.redmineUrl;
-                   if ( redmineUrl.slice(-1) !== "/" ) {
+                    var redmineUrl = items.redmineUrl;
+                    if ( redmineUrl.slice(-1) !== "/" ) {
                        redmineUrl = redmineUrl + "/";
                     }
                     
-                    callback({key: key, propagate: propagate, redmineUrl: redmineUrl});
+                    callback({key: key, propagate: items.propagate, redmineUrl: redmineUrl, atomFeed: items.atomFeed});
                     
             });
 
@@ -187,7 +186,6 @@ FasterRedmine.prototype.injectScripts = function(tab) {
 
 FasterRedmine.prototype.getAtomFeed = function(url, callback) {
 
-    var feed;
     $.ajax({
         type: "GET",
         url: url,
@@ -204,6 +202,39 @@ FasterRedmine.prototype.getAtomFeed = function(url, callback) {
     });
 }
 
-FasterRedmine.prototype.updateBadge = function(tab) {
-    
+FasterRedmine.prototype.getAtomEntries = function(data) {
+    var xmlEntries = data.getElementsByTagName("entry");
+    var oEntries = new Array(0);
+
+    for (var i = 0; i < xmlEntries.length; ++i) {
+        var entry = {};
+        entry.url = xmlEntries[i].getElementsByTagName("id")[0].textContent;
+        entry.id = entry.url.substring(entry.url.lastIndexOf("/") + 1);
+        entry.title = xmlEntries[i].getElementsByTagName("title")[0].textContent;
+        oEntries.push(entry);
+    }
+
+    return oEntries;
 }
+
+FasterRedmine.prototype.updateBadge = function() {
+    FasterRedmine.prototype.getContentVariables(function (vars){
+        if (FasterRedmine.prototype.isValidURL(vars.atomFeed)) {
+            FasterRedmine.prototype.getAtomFeed(vars.atomFeed, function(data){
+                var entries = FasterRedmine.prototype.getAtomEntries(data);
+                chrome.browserAction.setBadgeText({text: entries.length.toString()});
+            });
+        }
+    }); 
+}
+
+FasterRedmine.prototype.isValidURL = function(url) {
+    var re = /^https?:\/\/((www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\,\d{1,3}).*/gi;
+    
+    if (!re.test(url))
+        return false;
+    else
+        return true;
+ 
+}
+

@@ -3,7 +3,7 @@ function saveOptions() {
 
     var key = document.getElementById('key').value;
     var redmineUrl = document.getElementById('redmineUrl').value;
-    var atom_feed = document.getElementById('atom_feed').value;
+    var atomFeed = document.getElementById('atom_feed').value;
     var propagate = document.getElementById('propagate').checked;
     var reload = document.getElementById('reload').checked;
 
@@ -16,7 +16,7 @@ function saveOptions() {
         return;
     }
     
-    if  (atom_feed.trim().length > 0 && !isValidURL(atom_feed)) {
+    if  (atomFeed.trim().length > 0 && !isValidURL(atomFeed)) {
         notifyUser('Invalid Atom feed URL. Please enter a URL of the form: https://rm.myco.com/projects/1/issues.atom?key=123ABC&query_id=123');
         return;
     }
@@ -32,7 +32,7 @@ function saveOptions() {
         propagate: propagate,
         redmineUrl: redmineUrl,
         reload: reload,
-        atom_feed: atom_feed
+        atomFeed: atomFeed
     }, function() {
         // Store key locally
         chrome.storage.local.set({key: key}, notifyUser);
@@ -50,7 +50,7 @@ function saveOptions() {
 }
 
 function isValidURL(url) {
-    var re = /^https?:\/\/((www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)$|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\,\d{1,3})/gi;
+    var re = /^https?:\/\/((www\.)?[-a-zA-Z0-9:%._\+~#=]{2,256}\.[a-z]{2,4}\b(\/)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\,\d{1,3})/gi;
     
     if (!re.test(url))
         return false;
@@ -93,12 +93,12 @@ function restoreOptions() {
     propagate: true,
     reload: true,
     redmineUrl: '',
-    atom_feed: ''
+    atomFeed: ''
   }, function(items) {
     document.getElementById('propagate').checked = items.propagate;
     document.getElementById('reload').checked = items.reload;
     document.getElementById('redmineUrl').value = items.redmineUrl;
-    document.getElementById('atom_feed').value = items.atom_feed;
+    document.getElementById('atom_feed').value = items.atomFeed;
   });
 
   chrome.storage.local.get({
