@@ -39,7 +39,6 @@ function saveOptions() {
     });
   
     chrome.runtime.sendMessage({requestPermission: true, origins: [redmineUrl]}, function(response) {
-        console.log("options.js::saveOptions::sendMessage: requestPermission; response.granted = " + response.granted);
         if (response.granted) {
             notifyUser('Access to ' + redmineUrl + ' granted.');
             refreshBrowserActionIconAllTabs();

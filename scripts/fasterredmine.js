@@ -222,7 +222,12 @@ FasterRedmine.prototype.updateBadge = function() {
         if (FasterRedmine.prototype.isValidURL(vars.atomFeed)) {
             FasterRedmine.prototype.getAtomFeed(vars.atomFeed, function(data){
                 var entries = FasterRedmine.prototype.getAtomEntries(data);
-                chrome.browserAction.setBadgeText({text: entries.length.toString()});
+                var count = "";
+                if (entries.length > 0){
+                    count = entries.length.toString();
+                }
+
+                chrome.browserAction.setBadgeText({text: count});
             });
         }
     }); 

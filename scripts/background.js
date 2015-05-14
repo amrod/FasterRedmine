@@ -90,8 +90,6 @@ chrome.alarms.create(alarmName, {delayInMinutes: 1, periodInMinutes: 1});
 //console.log("Alarm set.");
 
 chrome.alarms.onAlarm.addListener(function(alarm){
-    console.log("Alarm fired");
-    console.log(alarm);
     if (alarm.name === alarmName) {
         fr.updateBadge();
         console.log("Badge updated");
