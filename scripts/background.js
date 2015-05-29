@@ -61,6 +61,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         } else if (request.injectContentAllTabs) {
             injectContentScriptAllTabs();
+
+        } else if (request.updateBadge) {
+            fr.updateBadge(sendResponse);
         }
     }
 
@@ -112,7 +115,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
 chrome.alarms.onAlarm.addListener(function(alarm){
     if (alarm.name === alarmName) {
-        fr.updateBadge();
+        fr.updateBadge(function(entries){});
     }
 });
 

@@ -229,7 +229,7 @@ FasterRedmine.prototype.getAtomEntries = function(data) {
     return oEntries;
 }
 
-FasterRedmine.prototype.updateBadge = function() {
+FasterRedmine.prototype.updateBadge = function(callback) {
     FasterRedmine.prototype.getContentVariables(function (vars){
         if (FasterRedmine.prototype.isValidURL(vars.atomFeed)) {
             FasterRedmine.prototype.getAtomFeed(vars.atomFeed, function(data){
@@ -240,6 +240,7 @@ FasterRedmine.prototype.updateBadge = function() {
                 }
 
                 chrome.browserAction.setBadgeText({text: count});
+                callback(entries);
             });
         }
     }); 
