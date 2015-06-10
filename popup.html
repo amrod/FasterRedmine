@@ -1,3 +1,7 @@
+<!--
+Copyright 2015 Amaury Rodriguez. See the LICENSE file at the top-level directory of this distribution and at https://github.com/amrod/FasterRedmine/blob/master/LICENSE.txt.
+-->
+
 <!DOCTYPE html>
 <html>
   <head>    
@@ -7,15 +11,20 @@
 
   <body> 
     
+    <div class="body">
+
     <div class="header">Faster Redmine</div>
-    
+    <div>
+        <div class="message" id="message"></div>
+        <div class="button"><button id="button">Options</button></div>
+    </div>
+
     <main>
     <div id="allcards"></div>
     </main>
 
-    <div class="message" id="message"></div>
-    <div class="button"><button id="button">Options</button></div>
-    
+    </div>
+    <script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="scripts/popup.js"></script>
   </body>
 </html>

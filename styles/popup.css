@@ -1,14 +1,21 @@
+/*
+ * Copyright 2015 Amaury Rodriguez. See the LICENSE file at the top-level directory of this distribution and at https://github.com/amrod/FasterRedmine/blob/master/LICENSE.txt.
+ */
+
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,700,500italic,900,700italic,900italic);
 
 * { font-family: 'Roboto', sans-serif; line-height:1.2; vertical-align:middle; }
 
 body { 
-    min-width: 300px;
-    background:whitesmoke;  
-    overflow:hidden;  
+  min-width: 300px;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/icons/background-texture-cloth.jpg');
+  /*overflow:hidden; */
+  
 } 
 
-
+div.body {
+    padding-right:2.5%; 
+}
 main {
   /*
   display:block;
@@ -23,38 +30,44 @@ main {
   transform-origin:center 3rem;
   transition:transform .3s;
   */
-  width:20rem;
-
+  //width:20rem;
+  clear:both;
+  height:0;
+  line-height:0;
+  display:block;
 }
-
+/*
 header {
-  /*
+  
   position:absolute;
   z-index:0;
   top:0; left:0; right:0;
   height:10rem;
   transition:transform .5s, opacity .3s;
-  background:url(http://www.droid-life.com/wp-content/uploads/2013/01/googlenownewyork.png)  center center;
   background-size:cover;
-  */
+  
 }
-
+*/
 div.header {
     text-align: center;
     font-weight: bold;
     padding: 5px 5px 20px 20px;
-    font-size:1rem;
+    font-size:1.1rem;
 }
 
 div.message {
     text-align: center;
     padding: 0px 5px 10px 5px;
+    width: 70%;
+    float: left;
 }
 
 div.button {
-    text-align: center;
+    text-align: right;
+    float: right;
+    width: 25%;
 }
-
+/*
 input, .card {
   position:relative;
   z-index:2;
@@ -80,6 +93,8 @@ input:focus + header {
   transform:translate3d(0,-10rem,0);
   opacity:0;
 }
+*/
+
 
 .card {
   padding:.5rem;
@@ -91,25 +106,28 @@ input:focus + header {
   animation:fly-in-from-left .2s .4s ease both;
   transform-origin:top left;
 }
+
 .card:nth-child(even){
   animation-name:fly-in-from-right;
   animation-delay:.1s;
  transform-origin:top right;
 }
 
-@keyframes fly-in-from-left {
+*@keyframes fly-in-from-left {
   from {
     transform:translateY(15rem) rotate(15deg);
     opacity:0;
   }
 }
 
+/*
 @keyframes fly-in-from-right {
   from {
     transform:translateY(15rem) rotate(-15deg);
     opacity:0;
   }
 }
+*/
 
 .card:after {
   position:absolute;
@@ -129,13 +147,13 @@ h1 {
   font-size:1rem;
   font-weight:300;
 }
-  strong {
-    font-weight:300;
-    color:#539D00;
-  }
+strong {
+  font-weight:300;
+  color:#539D00;
+}
 
 h2 {
-  font-size:.5rem;
+  font-size:.7rem;
   line-height:.5;
   color:gray;
   font-weight:400;

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Amaury Rodriguez. See the LICENSE file at the top-level directory of this distribution and at https://github.com/amrod/FasterRedmine/blob/master/LICENSE.txt.
+ */
+
 // Saves options to chrome.storage.sync.
 function saveOptions() {
 
@@ -7,7 +11,7 @@ function saveOptions() {
     var propagate = document.getElementById('propagate').checked;
     var reload = document.getElementById('reload').checked;
 
-    if ( redmineUrl.slice(-1) !== "/" ) {
+    if ( redmineUrl.slice(-1) !== "/" && redmineUrl.length > 0) {
         redmineUrl = redmineUrl + "/";
     }
     

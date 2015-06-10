@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Amaury Rodriguez. See the LICENSE file at the top-level directory of this distribution and at https://github.com/amrod/FasterRedmine/blob/master/LICENSE.txt.
+ */
+
 function display() {
     
     chrome.tabs.query({active: true, currentWindow: true}, function (arrayOfTabs) {
@@ -47,3 +51,8 @@ function openOptions() {
 
 document.addEventListener('DOMContentLoaded', display);
 document.getElementById('button').addEventListener('click', openOptions);
+
+$('body').on('click', 'a', function(){
+    chrome.tabs.create({url: $(this).attr('href')});
+    return false;
+});

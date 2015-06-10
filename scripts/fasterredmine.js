@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 Amaury Rodriguez. See the LICENSE file at the top-level directory of this distribution and at https://github.com/amrod/FasterRedmine/blob/master/LICENSE.txt.
+ */
+
 function FasterRedmine() {}
 
 FasterRedmine.prototype.setApiKey = function(key) {
